@@ -15,6 +15,11 @@ class Vertex:
     def get_edges(self):
         return self.edges
 
+    def get_id(self):
+        return self.id
+
+    def set_id(self, id):
+        self.id = id
 
 class Graph:
     # TODO: switch to Vertex class
@@ -32,52 +37,53 @@ class Graph:
         if not self.is_vertex(e[0]) or not self.is_vertex(e[1]):
             raise ValueError('A vertex is not in the graph')
 
-        self.vertices[e[0]] |= {e[1]}
-        self.vertices[e[1]] |= {e[0]}
+        self.vertices[e[0]].add_edge(e[1])
+        self.vertices[e[1]].add_edge(e[0])
+
+        id = self.vertices[e[0]].get_id()
+        self.vertices[e[1]].set_id(id)
+
+        # print(self.vertices[e[0]].get_id())
+        # print(self.vertices[e[1]].get_id())
 
     def get_vertices(self):
         return self.vertices
 
     def get_edges(self, v):
-        return self.vertices[v]
-
-    def get_all_vertices(self):
-        # TODO
-        # needs to return a partition
-        # where each element/set is a vertex
-        ret = set()
-        for v in self.get_vertices().keys():
-            ret |= {v}
-        return ret
+        return self.vertices[v].get_edges()
 
     def get_all_edges(self):
         ret = set()
 
         for u in self.get_vertices():
             for v in self.get_edges(u):
+                # only adds 1 edge direction to set
+                # 2nd direction may be needed later
                 ret |= {(u, v)}
-
+                # ret |= {(v, u)}
         return ret
-
-    def get_all_children(self, v):
-        # a way to tell if two vertices are connected to each other
-        pass
 
     def is_vertex(self, v):
         return v in self.vertices
 
     def is_edge(self, e):
-        if not self.is_vertex(e[0]):
+        if not self.is_vertex(e[0]) or not self.is_vertex(e[1]):
             return False
         else:
-            return e[1] in self.vertices[e[0]]
-
-    def neighbours(self, v):
-        if not self.is_vertex(v):
-            raise ValueError('Vertex is not in the graph')
-
-        return self.vertices[v]
+            # undirected graph, so either direction should should be ok
+            return e[0] in self.vertices[e[1]].get_edges()
 
 
-a = Vertex()
-b = Vertex()
+if __name__ == '__main__':
+    # sandbox
+
+    g = Graph()
+
+    g.add_vertex('a')
+    g.add_vertex('b')
+
+    g.add_edge(('a', 'b'))
+
+    print(g.get_vertices())
+    print(g.get_edges('a'))
+    print(g.get_edges('b'))
