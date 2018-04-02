@@ -1,4 +1,23 @@
+from itertools import count
+
+
+class Vertex:
+    # a way to keep track of connected vertices in the maze
+    _id = count(0)
+
+    def __init__(self):
+        self.id = next(self._id)
+        self.edges = set()
+
+    def add_edge(self, v):
+        self.edges |= {v}
+
+    def get_edges(self):
+        return self.edges
+
+
 class Graph:
+    # TODO: switch to Vertex class
     # Slightly modified graph class from lectures
     def __init__(self):
         self.vertices = dict()
@@ -6,7 +25,7 @@ class Graph:
     def add_vertex(self, v):
         # v is tuple (x, y)
         if not self.is_vertex(v):
-            self.vertices[v] = set() # changed this from list
+            self.vertices[v] = Vertex() # changed this from list
 
     def add_edge(self, e):
         # e is a tuple (a, b) where a, b are tuples (x, y)
@@ -40,6 +59,10 @@ class Graph:
 
         return ret
 
+    def get_all_children(self, v):
+        # a way to tell if two vertices are connected to each other
+        pass
+
     def is_vertex(self, v):
         return v in self.vertices
 
@@ -55,11 +78,6 @@ class Graph:
 
         return self.vertices[v]
 
-g = Graph()
 
-g.add_vertex((1,1))
-g.add_vertex((2,2))
-
-k = g.get_all_vertices()
-
-print(k)
+a = Vertex()
+b = Vertex()
