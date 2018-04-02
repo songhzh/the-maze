@@ -3,10 +3,10 @@ from itertools import count
 
 class Vertex:
     # a way to keep track of connected vertices in the maze
-    _id = count(0)
+    # apparently id is a reserved keyword so we are using idn
 
-    def __init__(self):
-        self.id = next(self._id)
+    def __init__(self, idn):
+        self.idn = idn
         self.edges = set()
 
     def add_edge(self, v):
@@ -15,36 +15,55 @@ class Vertex:
     def get_edges(self):
         return self.edges
 
-    def get_id(self):
-        return self.id
+    def get_idn(self):
+        return self.idn
 
-    def set_id(self, id):
-        self.id = id
+    def set_idn(self, idn):
+        # TODO: recursively change the idn of all connected vertices as well
+        self.idn = idn
 
 class Graph:
-    # TODO: switch to Vertex class
     # Slightly modified graph class from lectures
+    _idn = count(0)
+
     def __init__(self):
         self.vertices = dict()
 
     def add_vertex(self, v):
         # v is tuple (x, y)
         if not self.is_vertex(v):
-            self.vertices[v] = Vertex() # changed this from list
+            idn = next(self._idn)
+            self.vertices[v] = Vertex(idn) # changed this from list
 
     def add_edge(self, e):
         # e is a tuple (a, b) where a, b are tuples (x, y)
         if not self.is_vertex(e[0]) or not self.is_vertex(e[1]):
             raise ValueError('A vertex is not in the graph')
 
+        if self.get_idn(e[0]) == self.get_idn(e[1]):
+            # make sure maze shape is retained
+            raise ValueError('Vertices are already connected')
+
         self.vertices[e[0]].add_edge(e[1])
         self.vertices[e[1]].add_edge(e[0])
 
-        id = self.vertices[e[0]].get_id()
-        self.vertices[e[1]].set_id(id)
+        # links vertices together
+        self.set_idn(e[1], self.get_idn(e[0]))
 
-        # print(self.vertices[e[0]].get_id())
-        # print(self.vertices[e[1]].get_id())
+        # print(self.vertices[e[0]].get_idn())
+        # print(self.vertices[e[1]].get_idn())
+
+    def set_idn(self, v, idn):
+        if not self.is_vertex(v):
+            raise ValueError('The vertex is not in the graph')
+
+        self.vertices[v].set_idn(idn)
+
+    def get_idn(self, v):
+        if not self.is_vertex(v):
+            raise ValueError('The vertex is not in the graph')
+
+        return self.vertices[v].get_idn()
 
     def get_vertices(self):
         return self.vertices
@@ -71,7 +90,7 @@ class Graph:
             return False
         else:
             # undirected graph, so either direction should should be ok
-            return e[0] in self.vertices[e[1]].get_edges()
+            return e[0] in self.get_edges(e[1])
 
 
 if __name__ == '__main__':
