@@ -23,7 +23,7 @@ class Vertex:
         self.idn = idn
 
 class Graph:
-    # Slightly modified graph class from lectures
+    # """Slightly""" modified graph class from lectures
     _idn = count(0)
 
     def __init__(self):
