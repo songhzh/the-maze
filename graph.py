@@ -13,7 +13,8 @@ class Graph:
         if not self.is_vertex(e[0]) or not self.is_vertex(e[1]):
             raise ValueError('A vertex is not in the graph')
 
-        self.vertices[e[0]] += {e[1]}
+        self.vertices[e[0]] |= {e[1]}
+        self.vertices[e[1]] |= {e[0]}
 
     def get_vertices(self):
         return self.vertices
@@ -37,9 +38,6 @@ class Graph:
             for v in self.get_edges(u):
                 ret |= {(u, v)}
 
-        # maybe make ret a list
-        # sort it by manhattan distance
-        # before returning
         return ret
 
     def is_vertex(self, v):
