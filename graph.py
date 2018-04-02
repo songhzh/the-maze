@@ -4,7 +4,7 @@ class Graph:
 
     def add_vertex(self, v):
         # v is tuple (x, y)
-        if not is_vertex(v):
+        if not self.is_vertex(v):
             self.vertices[v] = list()
 
     def add_edge(self, e):
