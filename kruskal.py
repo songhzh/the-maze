@@ -8,3 +8,4 @@ def kruskal(g):
 
 
     for (u, v) in g.get_all_edges():
+        return

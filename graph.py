@@ -22,6 +22,7 @@ class Vertex:
         # TODO: recursively change the idn of all connected vertices as well
         self.idn = idn
 
+
 class Graph:
     # """Slightly""" modified graph class from lectures
     _idn = count(0)

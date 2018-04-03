@@ -60,7 +60,7 @@ class UnionFind:
 
         # Do nothing if they are part of the same set
         if x_rep == y_rep:
-            return
+            return False
 
         if self.rank[x_rep] > self.rank[y_rep]:
             self.parent[y_rep] = x_rep
@@ -70,6 +70,8 @@ class UnionFind:
             # Their ranks are equal
             self.parent[y_rep] = x_rep
             self.rank[x_rep] += 1
+
+        return True
 
 
 if __name__ == '__main__':

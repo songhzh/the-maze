@@ -1,4 +1,7 @@
 import pygame
+from maze import Maze
+from cell import Cell
+from display import draw_cell
 
 pygame.init()
 
@@ -8,6 +11,8 @@ black = (0, 0, 0)
 gameDisplay = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('The Maze')
 
+maze = Maze(3, 3)
+
 gameExit = False
 while not gameExit:
     for event in pygame.event.get():
@@ -16,7 +21,9 @@ while not gameExit:
             gameExit = True
 
     gameDisplay.fill(white)
-    pygame.draw.rect(gameDisplay, black, [10, 10, 300, 300])
+    for i in range(10):
+        for j in range(10):
+            draw_cell(gameDisplay, Cell((i*20, j*20)))
 
     pygame.display.update()
 
