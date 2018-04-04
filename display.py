@@ -26,4 +26,5 @@ def draw_cell(screen, cell):
     if cell.east is None:
         cell_surface.blit(vert_wall, (CELL_SIZE - WALL_SIZE, 0))
 
-    screen.blit(cell_surface, cell.get_pos())
+    pos = cell.x * CELL_SIZE, cell.y * CELL_SIZE
+    screen.blit(cell_surface, pos)

@@ -1,7 +1,7 @@
 from cell import Cell
 
 
-class Grid:
+class Graph:
     
     def __init__(self):
         self.cells = dict()
@@ -54,7 +54,7 @@ class Grid:
 
 
 if __name__ == '__main__':
-    g = Grid()
+    g = Graph()
     g.add_vertex((1, 1))
     g.add_vertex((2,2))
     g.add_vertex((3,3))

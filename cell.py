@@ -1,3 +1,6 @@
+directions = {'north', 'south', 'east', 'west'}
+
+
 class Cell:
     
     def __init__(self, pos):
@@ -11,19 +14,23 @@ class Cell:
         # self.above = None
         # self.below = None
 
-    def add_edge(self, cell):
-        relative = self.get_relative_pos(cell)
-
-        if relative == 'north' and self.north is None:
+    def add_edge(self, direction, cell):
+        if direction == 'north' and self.north is None:
             self.north = cell
-        elif relative == 'south' and self.south is None:
+        elif direction == 'south' and self.south is None:
             self.south = cell
-        elif relative == 'east' and self.east is None:
+        elif direction == 'east' and self.east is None:
             self.east = cell
-        elif relative == 'west' and self.west is None:
+        elif direction == 'west' and self.west is None:
             self.west = cell
         else:
             raise ValueError('Unable to connect cell')
+
+    def has_edge(self, direction):
+        if direction in directions:
+            return self.__dict__[direction] is not None
+
+        raise ValueError('Invalid edge direction')
 
     def get_relative_pos(self, cell):
         if cell.get_y() < self.get_y():
@@ -38,7 +45,7 @@ class Cell:
             return None
 
     def get_pos(self):
-        return (self.x, self.y)
+        return self.x, self.y
 
     def get_x(self):
         return self.x
