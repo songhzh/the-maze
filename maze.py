@@ -1,7 +1,5 @@
-from graph import Graph
-from union_find import UnionFind
-from kruskal import kruskal
 from random import randint
+from union_find import UnionFind
 from cell import Cell
 
 

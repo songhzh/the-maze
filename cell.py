@@ -1,4 +1,5 @@
 class Cell:
+    
     def __init__(self, pos):
         # pos is tuple (x, y) or (x, y, z)
         self.x = pos[0]
