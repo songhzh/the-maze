@@ -4,10 +4,11 @@ from union_find import UnionFind
 from cell import Cell
 
 class Maze:
-    def __init__(self, width, height):
+    def __init__(self, width, length, height):
         self.width = width
+        self.lenght = length
         self.height = height
-        self.graph = Graph((width, height))
+        self.graph = Graph((width, length, height))
 
         for x in range(width):
             for y in range(height):

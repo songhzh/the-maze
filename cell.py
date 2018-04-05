@@ -1,4 +1,4 @@
-directions = {'north', 'south', 'east', 'west'}
+directions = {'north', 'south', 'east', 'west', 'above', 'below'}
 
 
 class Cell:
@@ -7,16 +7,18 @@ class Cell:
         # pos is tuple (x, y) or (x, y, z)
         self.x = pos[0]
         self.y = pos[1]
+        self.z = pos[2]
+
         self.north = None
         self.south = None
         self.east = None
         self.west = None
-        # self.above = None
-        # self.below = None
+        self.above = None
+        self.below = None
 
     def add_edge(self, cell):
         direction = self.get_relative_pos(cell)
-        
+
         if direction == 'north' and self.north is None:
             self.north = cell
         elif direction == 'south' and self.south is None:
@@ -25,6 +27,10 @@ class Cell:
             self.east = cell
         elif direction == 'west' and self.west is None:
             self.west = cell
+        elif direction == 'above' and self.above is None:
+            self.above = cell
+        elif direction == 'below' and self.below is None:
+            self.below = cell
         else:
             raise ValueError('Unable to connect cell')
 
@@ -43,11 +49,17 @@ class Cell:
             return 'east'
         elif cell.x < self.x:
             return 'west'
+        elif cell.z > self.z:
+            return 'above'
+        elif cell.z < self.z:
+            return 'below'
         else:
             return None
 
     def get_pos(self):
-        return self.x, self.y
+        return self.x, self.y, self.z
 
     def get_edges(self):
-        return {self.north, self.south, self.east, self.west}
+        return {self.north, self.south,
+                self.east, self.west,
+                self.above, self.below}

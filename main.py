@@ -4,6 +4,7 @@ from cell import Cell
 from display import draw_cell, draw_player
 
 width = 20 #int(input('Width: '))
+length = 20
 height = 20 #int(input('Height: '))
 
 pygame.init()
@@ -11,10 +12,10 @@ print('WASD for movement!')
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-gameDisplay = pygame.display.set_mode((width*30, height*30)) #TODO: fix
+gameDisplay = pygame.display.set_mode((width*30, length*30)) #TODO: fix
 pygame.display.set_caption('The Maze')
 
-maze = Maze(width, height)
+maze = Maze(width, length, height)
 
 gameExit = False
 mazeGenerated = False

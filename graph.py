@@ -4,10 +4,11 @@ from cell import Cell
 class Graph:
 
     def __init__(self, size):
-        # size is tuple (w, h)
+        # size is tuple (w, l, h)
         self.cells = dict()
         self.width = size[0]
-        self.height = size[1]
+        self.length = size[1]
+        self.height = size[2]
 
     def add_vertex(self, pos):
         # pos is tuple (x, y) or (x, y, z)
