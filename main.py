@@ -1,17 +1,20 @@
 import pygame
 from maze import Maze
 from cell import Cell
-from display import draw_cell
+from display import draw_cell, draw_player
+
+width = 20 #int(input('Width: '))
+height = 20 #int(input('Height: '))
 
 pygame.init()
-
+print('WASD for movement!')
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-gameDisplay = pygame.display.set_mode((800, 600))
+gameDisplay = pygame.display.set_mode((width*30, height*30)) #TODO: fix
 pygame.display.set_caption('The Maze')
 
-maze = Maze(20, 20)
+maze = Maze(width, height)
 
 gameExit = False
 mazeGenerated = False
@@ -20,14 +23,25 @@ while not gameExit:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameExit = True
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                maze.player_move(0, -1)
+            elif event.key == pygame.K_a:
+                maze.player_move(-1, 0)
+            elif event.key == pygame.K_s:
+                maze.player_move(0, 1)
+            elif event.key == pygame.K_d:
+                maze.player_move(1, 0)
+
+    if not mazeGenerated:
+        mazeGenerated = maze.generate(0.001)
 
     gameDisplay.fill(white)
 
     for cell in maze:
         draw_cell(gameDisplay, cell)
 
-    if not mazeGenerated:
-        mazeGenerated = maze.generate(0.01)
+    draw_player(gameDisplay, maze.get_player())
 
     pygame.display.update()
 

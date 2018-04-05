@@ -16,6 +16,7 @@ class Maze:
         self.areas = UnionFind([cell.get_pos() for cell in self])
         self.edge_choices = self.graph.get_all_edges()
 
+        self.player = self.graph.get_cell((0,0))
 
     def __iter__(self):
         """
@@ -45,6 +46,9 @@ class Maze:
             # Done iterating over cells
             raise StopIteration
 
+    def get_player(self):
+        return self.player
+
     def generate(self, delay):
         # chooses a random item from all possible edges
         # and removes this choice
@@ -61,3 +65,12 @@ class Maze:
 
         # returns if maze is completely generated
         return len(self.edge_choices) == 1
+
+    def player_move(self, dx, dy):
+        # checks if an edge exists between current and next cell
+        # if so, update player
+        p1 = self.player.get_pos()
+        p2 = self.player.x + dx, self.player.y + dy
+
+        if self.graph.is_edge((p1, p2)):
+            self.player = self.graph.get_cell(p2)
