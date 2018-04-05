@@ -38,17 +38,19 @@ class Graph:
             # returns one direction for the edge
             # i.e. even though the graph is bidirectional,
             # we only return 1 of the 2 directions
-            pos1 = (cell.x, cell.y)
+            p = (cell.x, cell.y, cell.z)
 
             if cell.x < self.width - 1:
-                # edge from current cell to cell on right
-                pos2 = (cell.x + 1, cell.y)
-                ret |= {(pos1, pos2)}
+                px = (cell.x + 1, cell.y, cell.z)
+                ret |= {(p, px)}
 
-            if cell.y < self.height - 1:
-                # edge from current cell to cell below
-                pos3 = (cell.x, cell.y + 1)
-                ret |= {(pos1, pos3)}
+            if cell.y < self.length - 1:
+                py = (cell.x, cell.y + 1, cell.z)
+                ret |= {(p, py)}
+
+            if cell.z < self.height - 1:
+                pz = (cell.x, cell.y, cell.z + 1)
+                ret |= {(p, pz)}
 
         return ret
 
@@ -78,12 +80,3 @@ class Graph:
 
         # either direction is ok
         return self.cells[p1] in self.cells[p2].get_edges()
-
-
-if __name__ == '__main__':
-    g = Graph()
-    g.add_vertex((1, 1))
-    g.add_vertex((2,2))
-    g.add_vertex((3,3))
-    g.add_edge(((1,1), (2,2)))
-    print(g.is_edge(((4,4), (3,3))))

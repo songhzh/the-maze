@@ -1,23 +1,26 @@
 from time import sleep
 from graph import Graph
 from union_find import UnionFind
-from cell import Cell
+from display import draw_cell
+
 
 class Maze:
-    def __init__(self, width, length, height):
+    def __init__(self, width, length, height, screen):
+        self.screen = screen
         self.width = width
-        self.lenght = length
+        self.length = length
         self.height = height
         self.graph = Graph((width, length, height))
 
         for x in range(width):
-            for y in range(height):
-                self.graph.add_vertex((x, y))
+            for y in range(length):
+                for z in range(height):
+                    self.graph.add_vertex((x, y, z))
 
         self.areas = UnionFind([cell.get_pos() for cell in self])
         self.edge_choices = self.graph.get_all_edges()
 
-        self.player = self.graph.get_cell((0,0))
+        self.player = self.graph.get_cell((0, 0, 0))
 
     def __iter__(self):
         """
@@ -26,6 +29,7 @@ class Maze:
 
         self._i = 0
         self._j = 0
+        self._k = 0
 
         return self
 
@@ -34,13 +38,18 @@ class Maze:
         Returns the next cell in the grid
         """
 
-        if self._i < self.width and self._j < self.height:
-            next_cell = self.graph.get_cell((self._i, self._j))
+        if self._i < self.width and self._j < self.length \
+                and self._k < self.height:
+
+            next_cell = self.graph.get_cell((self._i, self._j, self._k))
 
             self._i += 1
             if self._i == self.width:
                 self._i = 0
                 self._j += 1
+            if self._j == self.length:
+                self._j = 0
+                self._k += 1
 
             return next_cell
         else:
@@ -53,11 +62,15 @@ class Maze:
     def generate(self, delay):
         # chooses a random item from all possible edges
         # and removes this choice
-        choice = self.edge_choices.pop()
+        p1, p2 = self.edge_choices.pop()
 
         # adds an edge if it is valid
-        if self.areas.union(choice[0], choice[1]):
-            self.graph.add_edge(choice)
+        if self.areas.union(p1, p2):
+            self.graph.add_edge((p1, p2))
+            if self.player.z == p1[2]:
+                draw_cell(self.screen, self.graph.get_cell(p1))
+            if self.player.z == p2[2]:
+                draw_cell(self.screen, self.graph.get_cell(p2))
         else:
             # TODO: draw wall to improve coolness B-)
             pass
