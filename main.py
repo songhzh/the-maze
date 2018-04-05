@@ -3,8 +3,8 @@ from maze import Maze
 from cell import Cell
 from display import draw_cell, draw_player
 
-width = 20 #int(input('Width: '))
-height = 20 #int(input('Height: '))
+width = 50 #int(input('Width: '))
+height = 30 #int(input('Height: '))
 
 pygame.init()
 print('WASD for movement!')
@@ -12,12 +12,17 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 
 gameDisplay = pygame.display.set_mode((width*30, height*30)) #TODO: fix
+
 pygame.display.set_caption('The Maze')
 
-maze = Maze(width, height)
+maze = Maze(width, height, gameDisplay)
+delay = 1/(width * height * 1000)
+if delay < 0.01:
+    delay = 0
 
 gameExit = False
 mazeGenerated = False
+
 
 while not gameExit:
     for event in pygame.event.get():
@@ -34,12 +39,7 @@ while not gameExit:
                 maze.player_move(1, 0)
 
     if not mazeGenerated:
-        mazeGenerated = maze.generate(0.001)
-
-    gameDisplay.fill(white)
-
-    for cell in maze:
-        draw_cell(gameDisplay, cell)
+        mazeGenerated = maze.generate(delay)
 
     draw_player(gameDisplay, maze.get_player())
 

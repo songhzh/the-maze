@@ -1,10 +1,12 @@
 from time import sleep
 from graph import Graph
 from union_find import UnionFind
-from cell import Cell
+from display import draw_cell
+
 
 class Maze:
-    def __init__(self, width, height):
+    def __init__(self, width, height, screen):
+        self.screen = screen
         self.width = width
         self.height = height
         self.graph = Graph((width, height))
@@ -57,6 +59,8 @@ class Maze:
         # adds an edge if it is valid
         if self.areas.union(choice[0], choice[1]):
             self.graph.add_edge(choice)
+            draw_cell(self.screen, self.graph.get_cell(choice[0]))
+            draw_cell(self.screen, self.graph.get_cell(choice[1]))
         else:
             # TODO: draw wall to improve coolness B-)
             pass
