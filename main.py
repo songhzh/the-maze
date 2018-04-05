@@ -1,4 +1,5 @@
 import pygame
+import time
 from maze import Maze
 from cell import Cell
 from display import draw_cell, draw_player
@@ -17,7 +18,7 @@ gameDisplay = pygame.display.set_mode((width*30, length*30))  # TODO: fix
 
 pygame.display.set_caption('The Maze')
 
-maze = Maze(width, length, height, gameDisplay)
+maze = Maze(width, length, height)
 delay = 1/(width * height * 1000)
 if delay < 0.01:
     delay = 0
@@ -39,12 +40,21 @@ while not gameExit:
             elif event.key == pygame.K_d:
                 maze.player_move(1, 0)
 
-    if not mazeGenerated:
-        mazeGenerated = maze.generate(delay)
+    if not maze.generated:
+        changed_cells = maze.generate(delay)
+
+        if changed_cells is not None:
+            player = maze.get_player()
+            if player.z == changed_cells[0].z:
+                draw_cell(gameDisplay, changed_cells[0])
+            if player.z == changed_cells[1].z:
+                draw_cell(gameDisplay, changed_cells[1])
 
     draw_player(gameDisplay, maze.get_player())
 
     pygame.display.update()
+    time.sleep(delay)
+
 
 pygame.quit()
 quit()
