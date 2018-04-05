@@ -1,6 +1,6 @@
 from graph import Graph
 from union_find import UnionFind
-from display import draw_cell
+from managed_set import ManagedSet
 
 
 class Maze:
@@ -17,7 +17,7 @@ class Maze:
                     self.graph.add_vertex((x, y, z))
 
         self.areas = UnionFind([cell.get_pos() for cell in self])
-        self.edge_choices = self.graph.get_all_edges()
+        self.edge_choices = ManagedSet(self.graph.get_all_edges())
 
         self.player = self.graph.get_cell((0, 0, 0))
 
@@ -64,7 +64,7 @@ class Maze:
         while not self.generated:
             # chooses a random item from all possible edges
             # and removes this choice
-            p1, p2 = self.edge_choices.pop()
+            p1, p2 = self.edge_choices.pop_random()
 
             # adds an edge (removes a wall) if it is valid
             if self.areas.union(p1, p2):
