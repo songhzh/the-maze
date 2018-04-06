@@ -4,9 +4,9 @@ from maze import Maze
 from display import *
 
 
-width = 10
-length = 10
-height = 4
+width = 5
+length = 5
+height = 3
 
 pygame.init()
 print('WASD for movement!')
@@ -14,7 +14,7 @@ print('Q: down, E: up!')
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-gameDisplay = pygame.display.set_mode((width*30, length*30))  # TODO: fix
+gameDisplay = pygame.display.set_mode((width*60, length*60))  # TODO: fix
 
 pygame.display.set_caption('The Maze')
 
