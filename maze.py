@@ -55,10 +55,13 @@ class Maze:
             # Done iterating over cells
             raise StopIteration
 
+    def get_layer(self):
+        return self.graph.get_layer(self.player.z)
+
     def get_player(self):
         return self.player
 
-    def generate(self, delay):
+    def generate(self):
 
         # Loop until we have removed a wall
         while not self.generated:
@@ -80,11 +83,11 @@ class Maze:
 
         return None
 
-    def player_move(self, dx, dy):
+    def player_move(self, dx, dy, dz):
         # checks if an edge exists between current and next cell
         # if so, update player
         p1 = self.player.get_pos()
-        p2 = self.player.x + dx, self.player.y + dy
+        p2 = self.player.x + dx, self.player.y + dy, self.player.z + dz
 
         if self.graph.is_edge((p1, p2)):
             self.player = self.graph.get_cell(p2)

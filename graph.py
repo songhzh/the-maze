@@ -42,15 +42,15 @@ class Graph:
 
             if cell.x < self.width - 1:
                 px = (cell.x + 1, cell.y, cell.z)
-                ret |= {(p, px)}
+                ret.add((p, px))
 
             if cell.y < self.length - 1:
                 py = (cell.x, cell.y + 1, cell.z)
-                ret |= {(p, py)}
+                ret.add((p, py))
 
             if cell.z < self.height - 1:
                 pz = (cell.x, cell.y, cell.z + 1)
-                ret |= {(p, pz)}
+                ret.add((p, pz))
 
         return ret
 
@@ -59,6 +59,15 @@ class Graph:
             raise ValueError('Cell not in grid')
 
         return self.cells[pos]
+
+    def get_layer(self, z):
+        ret = set()
+
+        for i in range(self.width):
+            for j in range(self.length):
+                ret.add(self.get_cell((i, j, z)))
+
+        return ret
 
     def get_vertices(self):
         return self.cells

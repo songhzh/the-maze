@@ -30,6 +30,7 @@ def draw_cell(screen, cell):
     pos = cell.x * CELL_SIZE, cell.y * CELL_SIZE
     screen.blit(cell_surface, pos)
 
+
 def draw_player(screen, player):
     # player is a cell
     player_surface = pygame.Surface((PLAYER_SIZE, PLAYER_SIZE))
@@ -37,3 +38,9 @@ def draw_player(screen, player):
 
     pos = player.x * CELL_SIZE, player.y * CELL_SIZE
     screen.blit(player_surface, pos)
+
+
+def draw_layer(screen, layer):
+    # layer is a set of cells at a z-coord
+    for cell in layer:
+        draw_cell(screen, cell)

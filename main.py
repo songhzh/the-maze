@@ -1,13 +1,12 @@
 import pygame
 import time
 from maze import Maze
-from cell import Cell
-from display import draw_cell, draw_player
+from display import *
 
 
 width = 20
 length = 20
-height = 20
+height = 1
 
 pygame.init()
 print('WASD for movement!')
@@ -19,9 +18,6 @@ gameDisplay = pygame.display.set_mode((width*30, length*30))  # TODO: fix
 pygame.display.set_caption('The Maze')
 
 maze = Maze(width, length, height)
-delay = 1/(width * height * 1000)
-if delay < 0.01:
-    delay = 0
 
 gameExit = False
 mazeGenerated = False
@@ -32,28 +28,21 @@ while not gameExit:
             gameExit = True
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                maze.player_move(0, -1)
+                maze.player_move(0, -1, 0)
             elif event.key == pygame.K_a:
-                maze.player_move(-1, 0)
+                maze.player_move(-1, 0, 0)
             elif event.key == pygame.K_s:
-                maze.player_move(0, 1)
+                maze.player_move(0, 1, 0)
             elif event.key == pygame.K_d:
-                maze.player_move(1, 0)
+                maze.player_move(1, 0, 0)
 
     if not maze.generated:
-        changed_cells = maze.generate(delay)
-
-        if changed_cells is not None:
-            player = maze.get_player()
-            if player.z == changed_cells[0].z:
-                draw_cell(gameDisplay, changed_cells[0])
-            if player.z == changed_cells[1].z:
-                draw_cell(gameDisplay, changed_cells[1])
+        changed_cells = maze.generate()
+        draw_layer(gameDisplay, maze.get_layer())
 
     draw_player(gameDisplay, maze.get_player())
 
     pygame.display.update()
-    time.sleep(delay)
 
 
 pygame.quit()
