@@ -55,8 +55,8 @@ class Maze:
             # Done iterating over cells
             raise StopIteration
 
-    def get_layer(self):
-        return self.graph.get_layer(self.player.z)
+    def get_layer(self, layer):
+        return self.graph.get_layer(layer)
 
     def get_player(self):
         return self.player
@@ -91,3 +91,7 @@ class Maze:
 
         if self.graph.is_edge((p1, p2)):
             self.player = self.graph.get_cell(p2)
+        else:
+            p2 = p1
+
+        return self.graph.get_cell(p1), self.graph.get_cell(p2)
