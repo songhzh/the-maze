@@ -117,3 +117,11 @@ class Maze:
             p2 = p1
 
         return self.graph.get_cell(p1), self.graph.get_cell(p2)
+
+    def check_layer(self, new_layer):
+        if new_layer < 0:
+            return 0
+        elif new_layer >= self.height:
+            return self.height - 1
+        else:
+            return new_layer

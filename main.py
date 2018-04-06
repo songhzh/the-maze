@@ -11,6 +11,7 @@ height = 4
 pygame.init()
 print('WASD for movement!')
 print('Q: down, E: up!')
+print('up / down to peek at layers!')
 white = (255, 255, 255)
 black = (0, 0, 0)
 
@@ -23,9 +24,13 @@ maze = Maze(width, length, height)
 gameExit = False
 mazeGenerated = False
 clock = pygame.time.Clock()
+
 moveKeys = {pygame.K_w: (0, -1, 0), pygame.K_s: (0, 1, 0),
             pygame.K_a: (-1, 0, 0), pygame.K_d: (1, 0, 0),
             pygame.K_q: (0, 0, -1), pygame.K_e: (0, 0, 1)}
+scrollKeys = {pygame.K_UP: 1, pygame.K_DOWN: -1}
+
+prev, curr = maze.get_player(), maze.get_player()
 layer = maze.get_player().z
 
 while not gameExit:
@@ -48,21 +53,34 @@ while not gameExit:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameExit = True
-        elif event.type == pygame.KEYDOWN:
-            if maze.generated and event.key in moveKeys:
+        elif event.type == pygame.KEYDOWN and maze.generated:
+            if event.key in moveKeys:
                 # move player
                 prev, curr = maze.player_move(*moveKeys[event.key])
-                if prev.z != curr.z:
+                if layer != curr.z:
                     # change layers
-                    # TODO: draw this the same way as maze generation?
+                    layer = curr.z
+                    print('Moving to layer', layer + 1)
                     draw_layer(gameDisplay, maze.get_layer(curr.z))
                 else:
                     # update last cell
                     draw_cell(gameDisplay, prev)
 
+            elif event.key in scrollKeys:
+                new_layer = layer + scrollKeys[event.key]
+
+                if layer !=  maze.check_layer(new_layer):
+                    layer = new_layer
+                    print('Peeking at layer', layer + 1)
+                    draw_layer(gameDisplay, maze.get_layer(layer))
+
+            if event.key in moveKeys or event.key in scrollKeys:
                 # update player and screen
-                draw_player(gameDisplay, curr)
+                if layer == maze.get_player().z:
+                    draw_player(gameDisplay, maze.get_player())
+
                 pygame.display.update()
+
 
     clock.tick(60) # fps limit
 
