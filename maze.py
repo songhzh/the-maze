@@ -111,12 +111,24 @@ class Maze:
         p1 = self.player.get_pos()
         p2 = self.player.x + dx, self.player.y + dy, self.player.z + dz
 
+        c1 = self.graph.get_cell(p1)
+
         if self.graph.is_edge((p1, p2)):
             self.player = self.graph.get_cell(p2)
-        else:
-            p2 = p1
 
-        return self.graph.get_cell(p1), self.graph.get_cell(p2)
+            c2 = self.graph.get_cell(p2)
+
+            if c2.visited:
+                c1.visited = False
+                c2.visited = False
+            else:
+                c1.flip_visit()
+
+            return c1, c2
+
+        else:
+            return c1, c1
+
 
     def check_layer(self, new_layer):
         if new_layer < 0:
