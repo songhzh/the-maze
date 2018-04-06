@@ -4,9 +4,9 @@ from maze import Maze
 from display import *
 
 
-width = 5
-length = 5
-height = 3
+width = 10
+length = 10
+height = 4
 
 pygame.init()
 print('WASD for movement!')
@@ -14,7 +14,7 @@ print('Q: down, E: up!')
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-gameDisplay = pygame.display.set_mode((width*60, length*60))  # TODO: fix
+gameDisplay = pygame.display.set_mode((width*30, length*30))  # TODO: fix
 
 pygame.display.set_caption('The Maze')
 
@@ -49,7 +49,7 @@ while not gameExit:
         if event.type == pygame.QUIT:
             gameExit = True
         elif event.type == pygame.KEYDOWN:
-            if event.key in moveKeys:
+            if maze.generated and event.key in moveKeys:
                 # move player
                 prev, curr = maze.player_move(*moveKeys[event.key])
                 if prev.z != curr.z:

@@ -1,7 +1,7 @@
 import pygame
 
-CELL_SIZE = 60
-WALL_SIZE = 4
+CELL_SIZE = 30
+WALL_SIZE = 2
 PATH_SIZE = CELL_SIZE // 4
 PLAYER_SIZE = CELL_SIZE * 2 // 3
 BACKGROUND_COLOR = (0, 0, 0)  # Black
@@ -45,7 +45,7 @@ def draw_walls(screen, cell, surface):
 
 def draw_cell(screen, cell):
     cell_surface = pygame.Surface((CELL_SIZE, CELL_SIZE))
-    
+
     draw_walls(screen, cell, cell_surface)
     pos = cell.x * CELL_SIZE, cell.y * CELL_SIZE
 
