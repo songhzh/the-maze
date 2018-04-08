@@ -19,7 +19,7 @@ class GameManager:
     def __init__(self):
         self.width = 20
         self.length = 20
-        self.height = 2
+        self.height = 4
 
         self.disp = pygame.display.set_mode((self.width * CELL_SIZE,
                                              self.length * CELL_SIZE))

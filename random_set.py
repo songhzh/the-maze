@@ -1,14 +1,10 @@
 from random import randint
 
 
-class ManagedSet:
+class RandomSet:
     """
-    A class resembling the interface of a set that has the following properties:
-    * If an element is already in the ManagedSet, don't add it again
-    * O(1) insertion
-    * O(1) find
-    * O(1) random access
-    * O(1) removal
+    A class resembling the interface of a set that also
+    has O(1) random access
     """
 
     def __init__(self, s=None):
