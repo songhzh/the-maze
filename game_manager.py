@@ -1,7 +1,7 @@
 import pygame
 from maze import Maze
 from display import *
-from menu import DisplayObject, Button
+from menu import Menu
 
 
 # Move player in the 6 directions
@@ -25,6 +25,8 @@ class GameManager:
 
         self.disp = pygame.display.set_mode((self.width * CELL_SIZE,
                                              self.length * CELL_SIZE + 30))
+        self.menu = Menu(self)
+        self.menu.draw(self.disp)
 
         self.maze = None
         self.layer = None
@@ -68,6 +70,12 @@ class GameManager:
 
         return
 
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN and self.maze.generated:
+            self.get_input(event.key) # player movement or layer peek
+
+        self.menu.handle_event(event)
+
     def get_input(self, eventKey):
         """
         Determines player input and redirects to appropriate function
@@ -99,6 +107,7 @@ class GameManager:
             # Change layers
             self.layer = c2.z
             draw_layer(self.disp, self.maze.get_layer(c2.z))
+            self.menu.set_layer(self.disp, self.layer)
         else:
             # Update last cell
             # Less expensive
@@ -121,6 +130,7 @@ class GameManager:
             # Not at bottom of top of layers
             self.layer = new_layer
             draw_layer(self.disp, self.maze.get_layer(new_layer))
+            self.menu.set_layer(self.disp, self.layer)
 
     def get_player(self):
         return self.maze.get_player()

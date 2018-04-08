@@ -98,13 +98,20 @@ class Caption:
         self.y = 0
         self.centered = True
         self.color = color
-        self.size = size
-        self.font_type = pygame.font.get_default_font()
+        self._size = size
+        self._font_type = pygame.font.get_default_font()
+        self.font = self._create_font()
+
+    def _create_font(self):
+        return pygame.font.Font(self._font_type, self._size)
+
+    def size(self):
+        return self.font.size(self.text)
 
 
 def draw_text(screen, caption):
     try:
-        font = pygame.font.Font(caption.font_type, caption.size)
+        font = caption.font
         text = font.render(caption.text, True, caption.color)
         text_width, text_height = text.get_size()
 
