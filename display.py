@@ -4,6 +4,7 @@ import os
 pygame.font.init()
 
 CELL_SIZE = 30
+MENU_SIZE = CELL_SIZE
 WALL_SIZE = 2
 PATH_SIZE = CELL_SIZE // 4
 PLAYER_SIZE = CELL_SIZE * 2 // 3
@@ -58,15 +59,14 @@ def draw_cell(screen, cell):
     cell_surface = pygame.Surface((CELL_SIZE, CELL_SIZE))
 
     if cell.visited:
-        cell_surface.blit(visit_icon, ((CELL_SIZE - WALL_SIZE) // 2, \
-            (CELL_SIZE - WALL_SIZE) // 2))
+        cell_surface.blit(visit_icon, ((CELL_SIZE - WALL_SIZE) // 2,
+                                       (CELL_SIZE - WALL_SIZE) // 2))
 
     draw_walls(screen, cell, cell_surface)
     if cell.is_end:
         cell_surface.blit(door_icon, door_offset)
 
-
-    pos = cell.x * CELL_SIZE, cell.y * CELL_SIZE
+    pos = cell.x * CELL_SIZE, cell.y * CELL_SIZE + MENU_SIZE
 
     screen.blit(cell_surface, pos)
 
@@ -80,7 +80,7 @@ def draw_player(screen, player):
 
     draw_walls(screen, player, cell_surface)
 
-    pos = player.x * CELL_SIZE, player.y * CELL_SIZE
+    pos = player.x * CELL_SIZE, player.y * CELL_SIZE + MENU_SIZE
 
     screen.blit(cell_surface, pos)
 
@@ -91,12 +91,30 @@ def draw_layer(screen, layer):
         draw_cell(screen, cell)
 
 
-def draw_text(screen, text, x, y, size=50,
-              color=(200, 000, 000), font_type=pygame.font.get_default_font()):
+class Caption:
+    def __init__(self, text, size=50, color=(200, 000, 000)):
+        self.text = str(text)
+        self.x = 0
+        self.y = 0
+        self.centered = True
+        self.color = color
+        self.size = size
+        self.font_type = pygame.font.get_default_font()
+
+
+def draw_text(screen, caption):
     try:
-        text = str(text)
-        font = pygame.font.Font(font_type, size)
-        text = font.render(text, True, color)
+        font = pygame.font.Font(caption.font_type, caption.size)
+        text = font.render(caption.text, True, caption.color)
+        text_width, text_height = text.get_size()
+
+        if caption.centered:
+            x = caption.x + (screen.get_width() - text_width) // 2
+            y = caption.y + (screen.get_height() - text_height) // 2
+        else:
+            x = caption.x
+            y = caption.y
+
         screen.blit(text, (x, y))
 
     except Exception as e:
@@ -104,9 +122,6 @@ def draw_text(screen, text, x, y, size=50,
         raise e
 
 
-def draw_win(screen, width, length):
-
-    x_start = (width * CELL_SIZE - 265) // 2
-    y_start = (length * CELL_SIZE - 50) // 2
-
-    draw_text(screen, 'YOU WIN!!!', x_start, y_start, 50, (255, 255, 51))
+def draw_win(screen):
+    win_caption = Caption('YOU WIN!!!', color=(255, 255, 51))
+    draw_text(screen, win_caption)

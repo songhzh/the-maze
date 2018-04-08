@@ -1,6 +1,8 @@
 import pygame
 from maze import Maze
 from display import *
+from menu import DisplayObject, Button
+
 
 # Move player in the 6 directions
 MOVE_KEYS = {pygame.K_w: (0, -1, 0), pygame.K_s: (0, 1, 0),
@@ -19,17 +21,26 @@ class GameManager:
     def __init__(self):
         self.width = 20
         self.length = 20
-        self.height = 4
+        self.height = 2
 
         self.disp = pygame.display.set_mode((self.width * CELL_SIZE,
-                                             self.length * CELL_SIZE))
+                                             self.length * CELL_SIZE + 30))
 
+        self.maze = None
+        self.layer = None
+        self.genLoops = 1
+        self.generated = False
+
+        self.reset()
+
+    def reset(self):
         self.maze = Maze(self.width, self.length, self.height)
 
-        self.layer = self.get_player().z # currently-viewed layer
+        self.layer = self.get_player().z  # currently-viewed layer
 
         # Scale maze generation speed linearly with volume
-        self.genLoops = self.width * self.length * self.height // GEN_CONST
+        self.genLoops = max(1, self.width * self.length * self.height // GEN_CONST)
+        self.generated = False
 
     def generate_maze(self):
         """
@@ -52,9 +63,10 @@ class GameManager:
             else:
                 # end generation, draw player
                 draw_player(self.disp, self.get_player())
-                return True
+                self.generated = True
+                return
 
-        return False
+        return
 
     def get_input(self, eventKey):
         """
@@ -95,7 +107,7 @@ class GameManager:
         draw_player(self.disp, self.get_player())
 
         if c2.get_pos() == self.maze.end_cell.get_pos():
-            draw_win(self.disp, self.maze.width, self.maze.length)
+            draw_win(self.disp)
 
     def peek_layer(self, delta):
         """
