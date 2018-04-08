@@ -17,6 +17,8 @@ class Cell:
         self.below = None
         self.is_end = False
 
+        self.visited = False
+
     def add_edge(self, cell):
         direction = self.get_relative_pos(cell)
 
@@ -54,3 +56,6 @@ class Cell:
         return {self.north, self.south,
                 self.east, self.west,
                 self.above, self.below}
+
+    def flip_visit(self):
+        self.visited = not self.visited

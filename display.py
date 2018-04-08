@@ -10,9 +10,10 @@ PLAYER_SIZE = CELL_SIZE * 2 // 3
 BACKGROUND_COLOR = (0, 0, 0)  # Black
 
 WALL_COLOR = (255, 255, 255)  # White
-UP_COLOUR = (0, 255, 0)  # Green
-DOWN_COLOUR = (255, 0, 0)  # Red
-PLAYER_COLOUR = (0, 0, 255)  # Blue
+UP_COLOUR = (0, 255, 0) # Green
+DOWN_COLOUR = (255, 0, 0) # Red
+VISIT_COLOUR = (0, 255, 255) # Cyan
+PLAYER_COLOUR = (0, 0, 255) # Blue
 vert_wall = pygame.Surface((WALL_SIZE, CELL_SIZE))
 vert_wall.fill(WALL_COLOR)
 
@@ -24,6 +25,9 @@ up_path.fill(UP_COLOUR)
 
 down_path = pygame.Surface((PATH_SIZE, WALL_SIZE))
 down_path.fill(DOWN_COLOUR)
+
+visit_icon = pygame.Surface((WALL_SIZE, WALL_SIZE))
+visit_icon.fill(VISIT_COLOUR)
 
 door_icon = pygame.image.load(os.path.join('assets', 'door.jpg'))
 door_rect = door_icon.get_rect()
@@ -53,9 +57,14 @@ def draw_walls(screen, cell, surface):
 def draw_cell(screen, cell):
     cell_surface = pygame.Surface((CELL_SIZE, CELL_SIZE))
 
+    if cell.visited:
+        cell_surface.blit(visit_icon, ((CELL_SIZE - WALL_SIZE) // 2, \
+            (CELL_SIZE - WALL_SIZE) // 2))
+
     draw_walls(screen, cell, cell_surface)
     if cell.is_end:
         cell_surface.blit(door_icon, door_offset)
+
 
     pos = cell.x * CELL_SIZE, cell.y * CELL_SIZE
 
@@ -70,6 +79,7 @@ def draw_player(screen, player):
                                     (CELL_SIZE - PLAYER_SIZE) // 2))
 
     draw_walls(screen, player, cell_surface)
+
     pos = player.x * CELL_SIZE, player.y * CELL_SIZE
 
     screen.blit(cell_surface, pos)
