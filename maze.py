@@ -31,6 +31,9 @@ class Maze:
 
         self.player = self.graph.get_cell((0, 0, 0))
 
+        self.end_cell = self.graph.get_cell((self.width - 1, self.length - 1, self.height - 1))
+        self.end_cell.is_end = True
+
     def __iter__(self):
         """
         Returns an iterator to the start of the grid

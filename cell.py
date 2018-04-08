@@ -15,6 +15,7 @@ class Cell:
         self.west = None
         self.above = None
         self.below = None
+        self.is_end = False
 
     def add_edge(self, cell):
         direction = self.get_relative_pos(cell)

@@ -6,7 +6,7 @@ from display import *
 
 width = 10
 length = 10
-height = 4
+height = 1
 
 pygame.init()
 print('WASD for movement!')
@@ -16,7 +16,6 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 
 gameDisplay = pygame.display.set_mode((width*30, length*30))  # TODO: fix
-
 pygame.display.set_caption('The Maze')
 
 maze = Maze(width, length, height)
@@ -66,6 +65,9 @@ while not gameExit:
                     # update last cell
                     draw_cell(gameDisplay, prev)
 
+                if curr.get_pos() == maze.end_cell.get_pos():
+                    draw_win(gameDisplay, width, length)
+
             elif event.key in scrollKeys:
                 new_layer = layer + scrollKeys[event.key]
 
@@ -80,7 +82,6 @@ while not gameExit:
                     draw_player(gameDisplay, maze.get_player())
 
                 pygame.display.update()
-
 
     clock.tick(60) # fps limit
 

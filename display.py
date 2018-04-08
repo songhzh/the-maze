@@ -1,4 +1,7 @@
 import pygame
+import os
+
+pygame.font.init()
 
 CELL_SIZE = 30
 WALL_SIZE = 2
@@ -7,9 +10,9 @@ PLAYER_SIZE = CELL_SIZE * 2 // 3
 BACKGROUND_COLOR = (0, 0, 0)  # Black
 
 WALL_COLOR = (255, 255, 255)  # White
-UP_COLOUR = (0, 255, 0) # Green
-DOWN_COLOUR = (255, 0, 0) # Red
-PLAYER_COLOUR = (0, 0, 255) # Blue
+UP_COLOUR = (0, 255, 0)  # Green
+DOWN_COLOUR = (255, 0, 0)  # Red
+PLAYER_COLOUR = (0, 0, 255)  # Blue
 vert_wall = pygame.Surface((WALL_SIZE, CELL_SIZE))
 vert_wall.fill(WALL_COLOR)
 
@@ -21,6 +24,10 @@ up_path.fill(UP_COLOUR)
 
 down_path = pygame.Surface((PATH_SIZE, WALL_SIZE))
 down_path.fill(DOWN_COLOUR)
+
+door_icon = pygame.image.load(os.path.join('assets', 'door.jpg'))
+door_rect = door_icon.get_rect()
+door_offset = (CELL_SIZE - door_rect.width) // 2, (CELL_SIZE - door_rect.height) // 2
 
 player_icon = pygame.Surface((PLAYER_SIZE, PLAYER_SIZE))
 player_icon.fill(PLAYER_COLOUR)
@@ -36,17 +43,20 @@ def draw_walls(screen, cell, surface):
     if cell.east is None:
         surface.blit(vert_wall, (CELL_SIZE - WALL_SIZE, 0))
     if cell.above is not None:
-        surface.blit(up_path, ((CELL_SIZE - PATH_SIZE) // 2, \
-        CELL_SIZE // 3))
+        surface.blit(up_path, ((CELL_SIZE - PATH_SIZE) // 2,
+                               CELL_SIZE // 3))
     if cell.below is not None:
-        surface.blit(down_path, ((CELL_SIZE - PATH_SIZE) // 2, \
-        CELL_SIZE * 2 // 3))
+        surface.blit(down_path, ((CELL_SIZE - PATH_SIZE) // 2,
+                                 CELL_SIZE * 2 // 3))
 
 
 def draw_cell(screen, cell):
     cell_surface = pygame.Surface((CELL_SIZE, CELL_SIZE))
 
     draw_walls(screen, cell, cell_surface)
+    if cell.is_end:
+        cell_surface.blit(door_icon, door_offset)
+
     pos = cell.x * CELL_SIZE, cell.y * CELL_SIZE
 
     screen.blit(cell_surface, pos)
@@ -56,8 +66,8 @@ def draw_player(screen, player):
     # player is a cell
     cell_surface = pygame.Surface((CELL_SIZE, CELL_SIZE))
 
-    cell_surface.blit(player_icon, ((CELL_SIZE - PLAYER_SIZE) // 2, \
-        (CELL_SIZE - PLAYER_SIZE) // 2))
+    cell_surface.blit(player_icon, ((CELL_SIZE - PLAYER_SIZE) // 2,
+                                    (CELL_SIZE - PLAYER_SIZE) // 2))
 
     draw_walls(screen, player, cell_surface)
     pos = player.x * CELL_SIZE, player.y * CELL_SIZE
@@ -69,3 +79,24 @@ def draw_layer(screen, layer):
     # layer is a set of cells at a z-coord
     for cell in layer:
         draw_cell(screen, cell)
+
+
+def draw_text(screen, text, x, y, size=50,
+              color=(200, 000, 000), font_type=pygame.font.get_default_font()):
+    try:
+        text = str(text)
+        font = pygame.font.Font(font_type, size)
+        text = font.render(text, True, color)
+        screen.blit(text, (x, y))
+
+    except Exception as e:
+        print('Font error')
+        raise e
+
+
+def draw_win(screen, width, length):
+
+    x_start = (width * CELL_SIZE - 265) // 2
+    y_start = (length * CELL_SIZE - 50) // 2
+
+    draw_text(screen, 'YOU WIN!!!', x_start, y_start, 50, (255, 255, 51))
