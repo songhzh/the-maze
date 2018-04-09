@@ -5,7 +5,7 @@ from binary_heap import BinaryHeap
 
 # Factor to control the amount of connection between layers
 # Lower = less connections between layers
-LAYER_FACTOR = 7
+LAYER_FACTOR = 15
 
 
 class Maze:
