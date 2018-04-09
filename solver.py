@@ -1,7 +1,6 @@
 from collections import deque
 from graph import Graph
 from cell import Cell
-from display import *
 
 class Solver:
     def __init__(self, maze):
