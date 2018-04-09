@@ -154,9 +154,10 @@ class Menu(DisplayObject):
         def restart(pos, button):
             if button == MOUSE_LEFT:
                 gm.disp.fill(BACKGROUND_COLOR)
-                gm.width = int(self.width_box.get_value())
-                gm.length = int(self.length_box.get_value())
-                gm.height = int(self.height_box.get_value())
+
+                gm.width = self._check_dim(self.width_box.get_value(), 20, 60)
+                gm.length = self._check_dim(self.length_box.get_value(), 10, 40)
+                gm.height = self._check_dim(self.height_box.get_value(), 1, 10)
 
                 gm.reset()
 
@@ -171,3 +172,20 @@ class Menu(DisplayObject):
     def update_layer(self, screen, layer):
         self.layer_label.update_text('Layer: {}/{}'.format(layer + 1, self.total_layers))
         self.layer_label.draw(screen)
+
+    def _check_dim(self, dim, minimum=10, maximum=40):
+        """
+        Returns a valid dimension
+        """
+
+        try:
+            dim = int(dim)
+        except ValueError:
+            print('Invalid dimension \'{}\', defaulting to {}'.format(dim, minimum))
+            dim = minimum
+
+        # Clamp to range
+        dim = max(minimum, dim)
+        dim = min(maximum, dim)
+
+        return dim
