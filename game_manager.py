@@ -21,7 +21,7 @@ class GameManager:
     def __init__(self):
         self.width = 20
         self.length = 20
-        self.height = 2
+        self.height = 4
 
         self.disp = pygame.display.set_mode((self.width * CELL_SIZE,
                                              self.length * CELL_SIZE + 30))
@@ -32,6 +32,8 @@ class GameManager:
         self.layer = None
         self.genLoops = 1
         self.generated = False
+        self.wonGame = False
+        self.timer = pygame.time.Clock()
 
         self.reset()
 
@@ -43,6 +45,10 @@ class GameManager:
         # Scale maze generation speed linearly with volume
         self.genLoops = max(1, self.width * self.length * self.height // GEN_CONST)
         self.generated = False
+        self.wonGame = False
+
+        self.timer.tick()
+
 
     def generate_maze(self):
         """
@@ -71,7 +77,8 @@ class GameManager:
         return
 
     def handle_event(self, event):
-        if event.type == pygame.KEYDOWN and self.maze.generated:
+        if event.type == pygame.KEYDOWN \
+           and self.maze.generated and not self.wonGame:
             self.get_input(event.key) # player movement or layer peek
 
         self.menu.handle_event(event)
@@ -116,7 +123,8 @@ class GameManager:
         draw_player(self.disp, self.get_player())
 
         if c2.get_pos() == self.maze.end_cell.get_pos():
-            draw_win(self.disp)
+            draw_win(self.disp, self.timer.tick() // 1000)
+            self.wonGame = True
 
     def peek_layer(self, delta):
         """

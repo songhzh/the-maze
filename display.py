@@ -92,10 +92,10 @@ def draw_layer(screen, layer):
 
 
 class Caption:
-    def __init__(self, text, size=50, color=(200, 000, 000)):
+    def __init__(self, text, size=50, color=(200, 000, 000), x=0, y=0):
         self.text = str(text)
-        self.x = 0
-        self.y = 0
+        self.x = x # Offset x
+        self.y = y # Offset y
         self.centered = True
         self.color = color
         self._size = size
@@ -129,6 +129,19 @@ def draw_text(screen, caption):
         raise e
 
 
-def draw_win(screen):
-    win_caption = Caption('YOU WIN!!!', color=(255, 255, 51))
-    draw_text(screen, win_caption)
+def draw_win(screen, timer):
+    # Black background
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            win_msg_bg = Caption('YOU WIN!!!', color=(0, 0, 0), x=i*4, y=j*4)
+            win_time_bg = Caption('Time: {}s'.format(timer), color=(0, 0, 0), \
+                                  size=25, x=i*4, y=50+j*4)
+            draw_text(screen, win_msg_bg)
+            draw_text(screen, win_time_bg)
+
+    win_msg = Caption('YOU WIN!!!', color=(255, 255, 51))
+    win_time = Caption('Time: {}s'.format(timer), color=(255, 255, 51), \
+                       size=25, y=50)
+                       
+    draw_text(screen, win_msg)
+    draw_text(screen, win_time)
