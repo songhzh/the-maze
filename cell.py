@@ -18,6 +18,7 @@ class Cell:
         self.is_end = False
 
         self.visited = False
+        self.hint = False
 
     def add_edge(self, cell):
         direction = self.get_relative_pos(cell)
@@ -53,9 +54,16 @@ class Cell:
         return self.x, self.y, self.z
 
     def get_edges(self):
-        return {self.north, self.south,
-                self.east, self.west,
-                self.above, self.below}
+        ret = set()
+
+        for direction in valid_directions:
+            if self.__dict__[direction] is not None:
+                ret.add(self.__dict__[direction])
+
+        return ret
 
     def flip_visit(self):
         self.visited = not self.visited
+
+    def flip_hint(self):
+        self.hint = not self.hint

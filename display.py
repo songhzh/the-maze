@@ -14,7 +14,9 @@ WALL_COLOR = (255, 255, 255)  # White
 UP_COLOUR = (0, 255, 0) # Green
 DOWN_COLOUR = (255, 0, 0) # Red
 VISIT_COLOUR = (0, 255, 255) # Cyan
+HINT_COLOUR = (255, 255, 0) # Yellow
 PLAYER_COLOUR = (0, 0, 255) # Blue
+
 vert_wall = pygame.Surface((WALL_SIZE, CELL_SIZE))
 vert_wall.fill(WALL_COLOR)
 
@@ -29,6 +31,9 @@ down_path.fill(DOWN_COLOUR)
 
 visit_icon = pygame.Surface((WALL_SIZE, WALL_SIZE))
 visit_icon.fill(VISIT_COLOUR)
+
+hint_icon = pygame.Surface((WALL_SIZE, WALL_SIZE))
+hint_icon.fill(HINT_COLOUR)
 
 door_icon = pygame.image.load(os.path.join('assets', 'door.jpg'))
 door_rect = door_icon.get_rect()
@@ -61,8 +66,12 @@ def draw_cell(screen, cell):
     if cell.visited:
         cell_surface.blit(visit_icon, ((CELL_SIZE - WALL_SIZE) // 2,
                                        (CELL_SIZE - WALL_SIZE) // 2))
+    elif cell.hint:
+        cell_surface.blit(hint_icon, ((CELL_SIZE - WALL_SIZE) // 2,
+                                       (CELL_SIZE - WALL_SIZE) // 2))
 
     draw_walls(screen, cell, cell_surface)
+
     if cell.is_end:
         cell_surface.blit(door_icon, door_offset)
 
@@ -92,10 +101,10 @@ def draw_layer(screen, layer):
 
 
 class Caption:
-    def __init__(self, text, size=50, color=(200, 000, 000)):
+    def __init__(self, text, size=50, color=(200, 000, 000), x=0, y=0):
         self.text = str(text)
-        self.x = 0
-        self.y = 0
+        self.x = x # Offset x
+        self.y = y # Offset y
         self.centered = True
         self.color = color
         self._size = size
@@ -129,6 +138,19 @@ def draw_text(screen, caption):
         raise e
 
 
-def draw_win(screen):
-    win_caption = Caption('YOU WIN!!!', color=(255, 255, 51))
-    draw_text(screen, win_caption)
+def draw_win(screen, timer):
+    # Black background
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            win_msg_bg = Caption('YOU WIN!!!', color=(0, 0, 0), x=i*4, y=j*4)
+            win_time_bg = Caption('Time: {}s'.format(timer), color=(0, 0, 0), \
+                                  size=25, x=i*4, y=50+j*4)
+            draw_text(screen, win_msg_bg)
+            draw_text(screen, win_time_bg)
+
+    win_msg = Caption('YOU WIN!!!', color=(255, 255, 51))
+    win_time = Caption('Time: {}s'.format(timer), color=(255, 255, 51), \
+                       size=25, y=50)
+
+    draw_text(screen, win_msg)
+    draw_text(screen, win_time)
