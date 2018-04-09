@@ -1,6 +1,6 @@
 import pygame
 from game_manager import GameManager
-from menu import Menu
+from components import Menu
 
 
 pygame.init()
@@ -22,6 +22,7 @@ while not gameExit:
 
         gm.handle_event(event)
 
+    gm.menu.update(gm.disp)
     pygame.display.update() # draw to screen
     clock.tick(60) # fps limit
 

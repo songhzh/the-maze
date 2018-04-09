@@ -1,7 +1,7 @@
 import pygame
 from maze import Maze
 from display import *
-from menu import Menu
+from components import Menu
 
 
 # Move player in the 6 directions
@@ -21,12 +21,10 @@ class GameManager:
     def __init__(self):
         self.width = 20
         self.length = 20
-        self.height = 2
+        self.height = 3
 
-        self.disp = pygame.display.set_mode((self.width * CELL_SIZE,
-                                             self.length * CELL_SIZE + 30))
-        self.menu = Menu(self)
-        self.menu.draw(self.disp)
+        self.disp = None
+        self.menu = None
 
         self.maze = None
         self.layer = None
@@ -36,9 +34,15 @@ class GameManager:
         self.reset()
 
     def reset(self):
+        self.disp = pygame.display.set_mode((max(self.width * CELL_SIZE, 560),
+                                             self.length * CELL_SIZE + 30))
+        self.menu = Menu(self)
+        self.menu.draw(self.disp)
+
         self.maze = Maze(self.width, self.length, self.height)
 
         self.layer = self.get_player().z  # currently-viewed layer
+        self.menu.update_layer(self.disp, self.layer)
 
         # Scale maze generation speed linearly with volume
         self.genLoops = max(1, self.width * self.length * self.height // GEN_CONST)
@@ -107,7 +111,7 @@ class GameManager:
             # Change layers
             self.layer = c2.z
             draw_layer(self.disp, self.maze.get_layer(c2.z))
-            self.menu.set_layer(self.disp, self.layer)
+            self.menu.update_layer(self.disp, self.layer)
         else:
             # Update last cell
             # Less expensive
@@ -130,7 +134,7 @@ class GameManager:
             # Not at bottom of top of layers
             self.layer = new_layer
             draw_layer(self.disp, self.maze.get_layer(new_layer))
-            self.menu.set_layer(self.disp, self.layer)
+            self.menu.update_layer(self.disp, self.layer)
 
     def get_player(self):
         return self.maze.get_player()
