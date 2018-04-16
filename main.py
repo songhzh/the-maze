@@ -1,8 +1,7 @@
 import pygame
 from game_manager import GameManager
-from components import Menu
 
-
+# Initialize pygame
 pygame.init()
 clock = pygame.time.Clock()
 pygame.display.set_caption('Man\'s Labyrinth')
@@ -10,12 +9,15 @@ pygame.display.set_caption('Man\'s Labyrinth')
 gameExit = False
 generated = False
 
+# Initialize the game manager
 gm = GameManager()
 
 while not gameExit:
+    # Keep generating the maze if not done generating
     if not gm.maze.generated:
         gm.generate_maze()
 
+    # Handle user events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameExit = True

@@ -4,6 +4,10 @@ from display import *
 from components import Menu
 from solver import Solver
 
+'''
+Constants
+'''
+
 # Move player in the 6 directions
 MOVE_KEYS = {pygame.K_w: (0, -1, 0), pygame.K_s: (0, 1, 0),
              pygame.K_a: (-1, 0, 0), pygame.K_d: (1, 0, 0),
@@ -21,7 +25,11 @@ GEN_CONST = 300
 
 
 class GameManager:
+    """
+    Manages the game state, maze generation and user input
+    """
     def __init__(self):
+        # These are defaults
         self.width = 20
         self.length = 20
         self.height = 3
@@ -41,6 +49,9 @@ class GameManager:
         print('Controls: WASD/QE to move. Up/Dn to peek. P for solution.')
 
     def reset(self):
+        """
+        Resets the maze and display to reflect current settings
+        """
         self.disp = pygame.display.set_mode((max(self.width * CELL_SIZE, 560),
                                              self.length * CELL_SIZE + 30))
         self.menu = Menu(self)
@@ -57,7 +68,6 @@ class GameManager:
         self.wonGame = False
 
         self.timer.tick()
-
 
     def generate_maze(self):
         """
@@ -87,6 +97,9 @@ class GameManager:
         return
 
     def handle_event(self, event):
+        """
+        Passes event handles both internally and to the game menu
+        """
         if event.type == pygame.KEYDOWN \
            and self.maze.generated and not self.wonGame:
             self.get_input(event.key) # player movement or layer peek or hint
