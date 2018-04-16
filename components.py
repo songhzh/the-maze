@@ -2,6 +2,10 @@ import pygame
 import types
 from display import *
 
+'''
+Constants
+'''
+
 COLOR_WHITE = (255, 255, 255)
 COLOR_INACTIVE = COLOR_WHITE
 COLOR_ACTIVE = (255, 255, 51)
@@ -43,6 +47,9 @@ class DisplayObject:
 
 
 class Label(DisplayObject):
+    """
+    Represents a text label
+    """
     def __init__(self, x, y, w, h, text, size=15):
         self.caption = Caption(text, size, COLOR_WHITE)
         super().__init__(x, y, w, h)
@@ -56,7 +63,9 @@ class Label(DisplayObject):
 
 
 class Button(DisplayObject):
-
+    """
+    Represents a clickable button, with text on top
+    """
     def __init__(self, x, y, w, h, text, size=15):
         super().__init__(x, y, w, h)
 
@@ -72,11 +81,14 @@ class Button(DisplayObject):
                 self.on_click(event.pos, event.button)
 
     def set_on_click(self, click_cb):
+        """
+        click_cb is of type function(pos, button)
+        """
         self.on_click = click_cb
 
 
 class InputBox(DisplayObject):
-    # Adapted from online template
+    # Adapted from code posted by user 'skrx' on stack overflow
     # Source: https://stackoverflow.com/questions/46390231/how-to-create-a-text-input-box-with-pygame
     def __init__(self, x, y, w, h, text='', max_length=2):
         super().__init__(x, y, w, h)
@@ -89,6 +101,9 @@ class InputBox(DisplayObject):
         self.active = False
 
     def handle_event(self, event):
+        """
+        Focus / unfocus the input box on click and accepts key input
+        """
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
             if self.rect.collidepoint(*event.pos):
@@ -108,6 +123,7 @@ class InputBox(DisplayObject):
                 elif event.unicode.isdigit():
                     if len(self.text) < self.max_length:
                         self.text += event.unicode
+                    # Overwrite the string with the new character
                     else:
                         self.text = event.unicode
 
@@ -117,8 +133,10 @@ class InputBox(DisplayObject):
         draw_text(self.surface, self.caption)
 
     def update(self, screen):
-        # To properly react to user input, we have to redraw the
-        # input box at every cycle
+        """
+        To properly react to user input, we have to redraw the
+        input box at every cycle
+        """
         self.draw(screen)
         pygame.draw.rect(screen, self.caption.color, self.rect, 2)
 
@@ -127,14 +145,19 @@ class InputBox(DisplayObject):
 
 
 class Menu(DisplayObject):
+    """
+    Represents the menu bar at the top of the screen
+    """
     def __init__(self, gm):
         super().__init__(0, 0, gm.disp.get_width(), 30)
 
+        # Layer label
         layer_text = 'Layer 1/{}'.format(gm.height)
         self.layer_label = Label(0, 0, 100, 30, layer_text)
         self.total_layers = gm.height
         self.add_child(self.layer_label)
 
+        # Dimension input boxes
         self.width_label = Label(100, 0, 60, 30, 'Width: ')
         self.width_box = InputBox(160, 2, 40, 25, str(gm.width))
         self.length_label = Label(210, 0, 80, 30, 'Length: ')
@@ -151,6 +174,7 @@ class Menu(DisplayObject):
         self.add_child(self.height_label)
         self.add_child(self.height_box)
 
+        # The restart button
         def restart(pos, button):
             if button == MOUSE_LEFT:
                 gm.disp.fill(BACKGROUND_COLOR)
@@ -166,6 +190,9 @@ class Menu(DisplayObject):
         self.add_child(restart_button)
 
     def update(self, screen):
+        """
+        We need to check for updates to the input boxes at every cycle
+        """
         for box in self.input_boxes:
             box.update(screen)
 

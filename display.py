@@ -3,6 +3,9 @@ import os
 
 pygame.font.init()
 
+'''
+Constants
+'''
 CELL_SIZE = 30
 MENU_SIZE = CELL_SIZE
 WALL_SIZE = 2
@@ -17,6 +20,9 @@ VISIT_COLOUR = (0, 255, 255) # Cyan
 HINT_COLOUR = (255, 255, 0) # Yellow
 PLAYER_COLOUR = (0, 0, 255) # Blue
 
+'''
+Pre-generate the cell tiles and icons for the game 
+'''
 vert_wall = pygame.Surface((WALL_SIZE, CELL_SIZE))
 vert_wall.fill(WALL_COLOR)
 
@@ -43,7 +49,11 @@ player_icon = pygame.Surface((PLAYER_SIZE, PLAYER_SIZE))
 player_icon.fill(PLAYER_COLOUR)
 
 
-def draw_walls(screen, cell, surface):
+def draw_walls(cell, surface):
+    """
+    Draw the walls and paths for a cell onto surface.
+    """
+    # Draw these walls if the edge DOES NOT exist
     if cell.north is None:
         surface.blit(hor_wall, (0, 0))
     if cell.south is None:
@@ -52,6 +62,7 @@ def draw_walls(screen, cell, surface):
         surface.blit(vert_wall, (0, 0))
     if cell.east is None:
         surface.blit(vert_wall, (CELL_SIZE - WALL_SIZE, 0))
+    # Draw these paths if the edge DOES exist
     if cell.above is not None:
         surface.blit(up_path, ((CELL_SIZE - PATH_SIZE) // 2,
                                CELL_SIZE // 3))
@@ -61,8 +72,12 @@ def draw_walls(screen, cell, surface):
 
 
 def draw_cell(screen, cell):
+    """
+    Draws a cell on the screen
+    """
     cell_surface = pygame.Surface((CELL_SIZE, CELL_SIZE))
 
+    # Draw Visited / Hint trails
     if cell.visited:
         cell_surface.blit(visit_icon, ((CELL_SIZE - WALL_SIZE) // 2,
                                        (CELL_SIZE - WALL_SIZE) // 2))
@@ -70,8 +85,10 @@ def draw_cell(screen, cell):
         cell_surface.blit(hint_icon, ((CELL_SIZE - WALL_SIZE) // 2,
                                        (CELL_SIZE - WALL_SIZE) // 2))
 
-    draw_walls(screen, cell, cell_surface)
+    # Draw walls and paths
+    draw_walls(cell, cell_surface)
 
+    # Draw ending
     if cell.is_end:
         cell_surface.blit(door_icon, door_offset)
 
@@ -81,13 +98,16 @@ def draw_cell(screen, cell):
 
 
 def draw_player(screen, player):
+    """
+    Draw the player on the screen
+    """
     # player is a cell
     cell_surface = pygame.Surface((CELL_SIZE, CELL_SIZE))
 
     cell_surface.blit(player_icon, ((CELL_SIZE - PLAYER_SIZE) // 2,
                                     (CELL_SIZE - PLAYER_SIZE) // 2))
 
-    draw_walls(screen, player, cell_surface)
+    draw_walls(player, cell_surface)
 
     pos = player.x * CELL_SIZE, player.y * CELL_SIZE + MENU_SIZE
 
@@ -95,12 +115,18 @@ def draw_player(screen, player):
 
 
 def draw_layer(screen, layer):
+    """
+    Redraw an entire layer. Used for peeking or when changing layers
+    """
     # layer is a set of cells at a z-coord
     for cell in layer:
         draw_cell(screen, cell)
 
 
 class Caption:
+    """
+    A utility class for aggregating information for drawing text
+    """
     def __init__(self, text, size=50, color=(200, 000, 000), x=0, y=0):
         self.text = str(text)
         self.x = x # Offset x
@@ -119,6 +145,11 @@ class Caption:
 
 
 def draw_text(screen, caption):
+    """
+    Draw text to a particular location on the screen.
+    Args:
+        caption - Text parameters to be drawn, must be of Caption class
+    """
     try:
         font = caption.font
         text = font.render(caption.text, True, caption.color)
@@ -139,6 +170,9 @@ def draw_text(screen, caption):
 
 
 def draw_win(screen, timer):
+    """
+    Draw the winning message to the screen
+    """
     # Black background
     for i in range(-1, 2):
         for j in range(-1, 2):

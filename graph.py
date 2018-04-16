@@ -2,7 +2,10 @@ from cell import Cell
 
 
 class Graph:
-
+    """
+    Implementation of a three dimensional undirected graph
+    with an underlying grid like structure.
+    """
     def __init__(self, size):
         # size is tuple (w, l, h)
         self.cells = dict()
@@ -32,6 +35,10 @@ class Graph:
         self.cells[p2].add_edge(self.cells[p1])
 
     def get_all_edges(self):
+        """
+        Nodes can only be connected to adjacent nodes (distance 1 away)
+        Returns all the possible edges that connect such nodes
+        """
         ret = set()
 
         for cell in self.cells.values():
@@ -61,6 +68,9 @@ class Graph:
         return self.cells[pos]
 
     def get_layer(self, z):
+        """
+        Returns all cells in a particular layer
+        """
         ret = set()
 
         for i in range(self.width):

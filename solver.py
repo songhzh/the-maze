@@ -1,8 +1,11 @@
 from collections import deque
-from graph import Graph
-from cell import Cell
+
 
 class Solver:
+    """
+    Uses breadth-first search to find the path from the start to the end of the maze
+    Note that since our maze is a Minimum Spanning Tree, there is only one solution
+    """
     def __init__(self, maze):
         self.graph = maze.graph
         self.path = list()

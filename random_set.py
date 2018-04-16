@@ -64,7 +64,7 @@ class RandomSet:
 
 
 if __name__ == '__main__':
-    test = ManagedSet({1, 2, 3})
+    test = RandomSet({1, 2, 3})
     for _ in range(3):
         test.pop_random()
 
